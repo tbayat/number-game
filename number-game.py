@@ -1,10 +1,17 @@
 from random import randrange
+import argparse
 
-def single_player() :
 
-    actual_number = randrange(1, 10)
+parser = argparse.ArgumentParser(description="it is a number game")
+parser.add_argument('--start','-s', type = int, default=0)
+parser.add_argument('--end', '-e', type = int, default = 10)
+parser.add_argument('--rounds', '-r', type = int, default=3)
+
+def single_player(range_start = 0, range_end=10, rounds=3) :
+
+    actual_number = randrange(range_start, range_end)
     won = False
-    for round in range(3):
+    for round in range(rounds):
         guess = int(input("please guess one number: "))
         if guess > actual_number :
             print("your guess is more than number")
@@ -20,7 +27,9 @@ def single_player() :
 
 def main():
 
-    won = single_player()
+    args = parser.parse_args()
+
+    won = single_player(args.start, args.end , args.rounds)
     if won :
         print("you won")
     else :
