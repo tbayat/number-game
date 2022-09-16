@@ -17,6 +17,7 @@ def single_player() :
     print (f"actual number was {actual_number}")
     return won
 
+
 def main():
 
     won = single_player()
