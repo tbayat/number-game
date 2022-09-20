@@ -32,7 +32,7 @@ def game(number_of_players, number_of_rounds, range_start=0, range_end=10):
     actual_number = randrange(range_start, range_end)
     results = {}
 
-    for count, round in enumerate(range(number_of_rounds), start=1):
+    for round in range(1, number_of_rounds + 1):
         for player in range(1, number_of_players + 1):
             results[player] = game_round(actual_number, round, player)
         if any(results.values()):
