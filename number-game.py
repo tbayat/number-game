@@ -1,3 +1,4 @@
+from mimetypes import init
 from random import randrange
 import argparse
 import sys
@@ -51,5 +52,3 @@ def main():
         print("you lost")
 
 main()
-
-
