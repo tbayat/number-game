@@ -1,4 +1,3 @@
-from mimetypes import init
 from random import randrange
 import argparse
 import sys
@@ -9,11 +8,6 @@ parser.add_argument('--start','-s', type = int, default=0)
 parser.add_argument('--end', '-e', type = int, default = 10)
 parser.add_argument('--rounds', '-r', type = int, default=3)
 
-class player:
-    def __init__(self, name, guess) :
-        self.name = name
-        self.guess = guess
-
 def take_guess(count,player):
     try:
         guess = int(input(f"{count}> player {player} > please guess one number: "))
@@ -21,92 +15,51 @@ def take_guess(count,player):
         return take_guess(count)
     return guess
 
-def single_player(range_start = 0, range_end=10, rounds=3) :
+def game_round(actual_number, round_number, player_name):
+    guess = take_guess(round_number, player_name)
 
-    actual_number = randrange(range_start, range_end)
     won = False
-    for count,round in enumerate(range(rounds),start=1):
-        guess = take_guess(count,1)
-        if guess > actual_number :
-            print("your guess is more than number")
-        elif guess < actual_number :
-            print( "your guess is less than number")
-        else :
-            won = True
-            break
+    if guess > actual_number:
+        print("your guess is more than number")
+    elif guess < actual_number :
+        print( "your guess is less than number")
+    else:
+        won = True
 
-    print (f"actual number was {actual_number}")
     return won
 
-def two_player():
-    winner_name2 = "noname"
-    winner_name1 = "noname"
-    looser_name1 = "noname"
-    won = False
-    actual_number = randrange(0, 50)
-    p1 = player(input("player 1 > please enter your name:"),0)
-    p2 = player(input("player 2 > please enter your name:"),0)
-    for count, round in enumerate(range(5), start = 1):
-        p1.guess = take_guess(count, 1)
-        p2.guess = take_guess(count, 2)
-        if p1.guess > actual_number and p2.guess > actual_number:
-            print(f"{p1.name}'s guess is more than number")
-            print(f"{p2.name}'s guess is more than number")
-        elif p1.guess > actual_number and p2.guess < actual_number:
-            print(f"{p1.name}'s guess is more than number")
-            print(f"{p2.name}'s guess is less than number")
-        elif p1.guess < actual_number and p2.guess > actual_number:
-            print(f"{p1.name}'s guess is less than number")
-            print(f"{p2.name}'s guess is more than number")
-        elif p1.guess < actual_number and p2.guess < actual_number:
-            print(f"{p1.name}'s guess is less than number")
-            print(f"{p2.name}'s guess is less than number")
-        
-        elif p1.guess == actual_number and p2.guess == actual_number:
-            won = True
-            winner_name1 = p1.name
-            winner_name2= p2.name
-            break
-        elif p1.guess == actual_number:
-            won = True
-            winner_name1 = p1.name
-            looser_name1 = p2.name
-            break
-        else :
-            won = True
-            winner_name1 = p2.name
-            looser_name1 = p1.name
-            break
-    print (f"actual number was {actual_number}")
-    return [won, winner_name1, looser_name1, winner_name2]
+def game(number_of_players, number_of_rounds, range_start=0, range_end=10):
+    actual_number = randrange(range_start, range_end)
+    results = {}
 
+    for count, round in enumerate(range(number_of_rounds), start=1):
+        for player in range(1, number_of_players + 1):
+            results[player] = game_round(actual_number, round, player)
+        if any(results.values()):
+            break
+
+    return results, actual_number
 
 
 def main():
+    args = parser.parse_args()
 
-    option =int(input("please choose 1 player or 2 player(just enter 1 or 2):"))
-    if option == 1:
-        args = parser.parse_args()
-        if args.start >= args.end :
-            print("the value for start should be less than end value")
-            sys.exit(1)
+    option =int(input("How many players are playing: "))
 
-        if args.rounds <= 0 :
-            print("value of rounds should not be zero or negative")
-            sys.exit(2)
+    if args.start >= args.end :
+        print("the value for start should be less than end value")
+        sys.exit(1)
 
-        won = single_player(args.start, args.end , args.rounds)
-        if won :
-            print("you won")
-        else :
-            print("you lost")
-    else :
-        result = two_player()
-        won = result[0]
-        if won == True and result[3] == "noname" :
-            print(f"{result[1]} won and {result[2]} losed")
-        elif won == True and result[3] != "noname" :
-            print(f"{result[1]} and {result[3]} won")    
+    if args.rounds <= 0 :
+        print("value of rounds should not be zero or negative")
+        sys.exit(2)
+
+    result, actual_number = game(option, args.rounds, args.start, args.end)
+    print(f"Actual number was {actual_number}")
+    for player, won in result.items():
+        if won:
+            print(f"player {player} won!")
         else:
-            print("both player were lose")
+            print(f"player {player} lost!")
+
 main()
