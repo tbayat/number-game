@@ -38,8 +38,10 @@ def single_player(range_start = 0, range_end=10, rounds=3) :
     print (f"actual number was {actual_number}")
     return won
 
-def multi_player():
-    winner_name2 = " "
+def two_player():
+    winner_name2 = "noname"
+    winner_name1 = "noname"
+    looser_name1 = "noname"
     won = False
     actual_number = randrange(0, 50)
     p1 = player(input("player 1 > please enter your name:"),0)
@@ -59,15 +61,16 @@ def multi_player():
         elif p1.guess < actual_number and p2.guess < actual_number:
             print(f"{p1.name}'s guess is less than number")
             print(f"{p2.name}'s guess is less than number")
-        elif p1.guess == actual_number:
-            won = True
-            winner_name1 = p1.name
-            looser_name1 = p2.name
-            break
+        
         elif p1.guess == actual_number and p2.guess == actual_number:
             won = True
             winner_name1 = p1.name
             winner_name2= p2.name
+            break
+        elif p1.guess == actual_number:
+            won = True
+            winner_name1 = p1.name
+            looser_name1 = p2.name
             break
         else :
             won = True
@@ -98,11 +101,11 @@ def main():
         else :
             print("you lost")
     else :
-        result = multi_player()
+        result = two_player()
         won = result[0]
-        if won == True and result[3] == " " :
+        if won == True and result[3] == "noname" :
             print(f"{result[1]} won and {result[2]} losed")
-        elif won == True and result[3] != " " :
+        elif won == True and result[3] != "noname" :
             print(f"{result[1]} and {result[3]} won")    
         else:
             print("both player were lose")
