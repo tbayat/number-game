@@ -7,16 +7,23 @@ from utils import take_a_number_input
 def take_guess(count, player):
     return take_a_number_input(f"{count}> player {player} > please guess one number: ")
 
+
+def check_the_guess(guess, actual_number):
+    if guess > actual_number:
+        return False, "your guess is more than number"
+    elif guess < actual_number :
+        return False, "your guess is less than number"
+
+    return True, "You won!"
+
+
+
 def game_round(actual_number, round_number, player_name):
     guess = take_guess(round_number, player_name)
 
-    won = False
-    if guess > actual_number:
-        print("your guess is more than number")
-    elif guess < actual_number :
-        print( "your guess is less than number")
-    else:
-        won = True
+    won, message = check_the_guess(guess, actual_number)
+    if not won:
+        print(message)
 
     return won
 
